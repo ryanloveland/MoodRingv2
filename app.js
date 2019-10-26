@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
     res.send("Hello World, fuk u");
 });
 
-app.get('/login', function(req, res) {
+app.get('/login', (req, res) => {
     res.redirect('https://accounts.spotify.com/authorize' +
             '?response_type=code' +
             '&client_id=' + client_id +
@@ -38,7 +38,6 @@ app.get('/callback', function(req, res) {
           console.log(`statusCode: ${res.statusCode}`)
           bodyResponse = JSON.parse(body);
           console.log(bodyResponse);
-          console.log(typeof bodyResponse);
           const options = {
               url: 'https://api.spotify.com/v1/me/top/tracks/',
               method: 'GET',
@@ -71,4 +70,4 @@ app.get('/callback', function(req, res) {
 });
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`MoodRing is now listening on PORT:${port}`))
