@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const my_client_id = "054911251a014d14805761ed90cc15fc";
 const redirect_uri = 'http://localhost:3000/callback';
 const request = require('request');
 const url = require('url');
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.CLIENT_SECRET;
 
 app.get('/', (req, res) => {
     res.send("Hello World, fuk u");
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
 app.get('/login', function(req, res) {
     res.redirect('https://accounts.spotify.com/authorize' +
             '?response_type=code' +
-            '&client_id=' + my_client_id +
+            '&client_id=' + client_id +
             '&scope=user-top-read' +
             '&redirect_uri=' + encodeURIComponent(redirect_uri));
 });
@@ -23,8 +24,8 @@ app.get('/callback', function(req, res) {
     let bodyResponse;
     request.post('https://accounts.spotify.com/api/token', {
         form: {
-            'client_id': "054911251a014d14805761ed90cc15fc",
-            'client_secret': "c3f7ca96879f423086ddf241bc323107",
+            'client_id': client_id,
+            'client_secret': client_secret,
             'grant_type': "authorization_code",
             'code': code,
             'redirect_uri': "http://localhost:3000/callback"
