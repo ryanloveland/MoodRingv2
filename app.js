@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const redirect_uri = 'http://localhost:3000/callback';
 const request = require('request');
 const url = require('url');
