@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT;
-const redirect_uri = 'http://localhost:3000/callback';
+const redirect_uri = 'http://spotifymoodring.heroku.com/callback';
 const request = require('request');
 const url = require('url');
 const client_id = process.env.CLIENT_ID;
@@ -35,7 +35,7 @@ app.get('/callback', function(req, res) {
             'client_secret': client_secret,
             'grant_type': "authorization_code",
             'code': code,
-            'redirect_uri': "http://localhost:3000/callback"
+            'redirect_uri': redirect_uri
             }
         }, (error, res, body) => {
           if (error) {
