@@ -16,7 +16,7 @@
 
 
 <div class="container">
-<h1 class="display-3">A Tale of Spotify Data Analysis</h1>
+<h1 class="display-5">Your Spotify Data Analysis!</h1>
 <% var totalValence = 0 %>
 <% var totalDance = 0 %>
 <% var totalPop = 0 %>
@@ -40,7 +40,7 @@
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Popularity: <%= (totalPop/recommendedCount).toFixed(4) * 100 %></p>
+                <p class="text-center p-0 m-0">Average Energy: <%= (totalPop/recommendedCount).toFixed(4) * 100 %></p>
             </div>
         </div>
     </div>
@@ -58,13 +58,13 @@
     <% for (var j = 0; j < listTracks.length; j++) { %>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Song # <%= j+1 %></h5>
-                <span class="card-text"><%= listTracks[j].name %> by <%= listTracks[j].artist %></span>
+                <h5 class="card-title"><%= listTracks[j].name %> by <%= listTracks[j].artist %></h5>
+                <span class="card-text">Based on: <%= listTracks[j].originalSongRelation %> by <%= listTracks[j].originalArtistRelation %></span>
             </div>
         </div>
     <% } %>
 </div>
-
+<div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var chart = new Chart(ctx, {
@@ -77,9 +77,9 @@ var chart = new Chart(ctx, {
             <% for (var y = 0; y < listTracks.length; y++) { %>
                         { label: '<%= listTracks[y].name %> by <%=listTracks[y].artist %>',
                           data: [
-                                { x: <%= (listTracks[y].danceability).toFixed(4) * 100 %>,
-                                    y: <%= (listTracks[y].popularity).toFixed(4) * 100 %>,
-                                    r: <%= (listTracks[y].valence).toFixed(4) * 30 %> } 
+                                { x: <%= Math.round(listTracks[y].danceability * 100) %>,
+                                    y: <%= Math.round(listTracks[y].popularity * 100) %>,
+                                    r: <%= Math.round(listTracks[y].valence * 30)    %> } 
                                 ],
                           backgroundColor: '#1db954'
                         },
@@ -107,6 +107,7 @@ var chart = new Chart(ctx, {
     }
 });
 </script>
+</div>
 
 </div>
 </body>

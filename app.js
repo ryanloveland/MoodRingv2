@@ -23,10 +23,6 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: redirect_uri
 });
 
-
-
-
-
 app.set('view engine', 'ejs');
 
 //Loads home page
@@ -54,7 +50,7 @@ app.get('/callback', async (req, res) => {
             spotifyApi.setAccessToken(data.body['access_token']);
 
             spotifyApi.setRefreshToken(data.body['refresh_token']);
-            console.log("Authorization finished withouth error")
+            console.log("Authorization finished without error")
         },
         function (err) {
             if (err.statusCode === 400 || err.statusCode === 401) {
@@ -67,7 +63,6 @@ app.get('/callback', async (req, res) => {
     )
 
     let listOfTracks = await User.recommend20Songs(spotifyApi)
-
     res.send("<a href='/display'>Click Here to display some data analysis!</a>");
 })
 
