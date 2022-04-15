@@ -1,3 +1,7 @@
+<%- include("navbar") %>
+
+
+<!-- This is the Data Graph Display Page -->
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -9,6 +13,8 @@
     </style>
 </head>
 <body>
+
+
 <div class="container">
 <h1 class="display-3">A Tale of Spotify Data Analysis</h1>
 <% var totalValence = 0 %>
@@ -16,65 +22,46 @@
 <% var totalPop = 0 %>
 <% var recommendedCount = 0 %>
 <% for (var t = 0; t < listTracks.length; t++) { %>
-    <% for (var s = 0; s < listTracks[t].relatedArtists.length; s++) { %>
-        <% for (var r = 0; r < listTracks[t].relatedArtists[s].topTracks.length; r++) { %>
-            <% totalValence += listTracks[t].relatedArtists[s].topTracks[r].valence %>
-            <% totalDance += listTracks[t].relatedArtists[s].topTracks[r].danceability %>
-            <% totalPop += listTracks[t].relatedArtists[s].topTracks[r].popularity %>
-            <% recommendedCount++ %>
-        <% } %>
-    <% } %>
+    <% totalValence += listTracks[t].valence %>
+    <% totalDance += listTracks[t].danceability %>
+    <% totalPop += listTracks[t].popularity %>
+    <% recommendedCount++ %>
 <% } %>
+
+
 <div class="row">
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Danceability: <%= totalDance/recommendedCount * 100 %></p>
+                <p class="text-center p-0 m-0">Average Danceability: <%= (totalDance/recommendedCount).toFixed(4) * 100 %></p>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Popularity: <%= totalPop/recommendedCount %></p>
+                <p class="text-center p-0 m-0">Average Popularity: <%= (totalPop/recommendedCount).toFixed(4) * 100 %></p>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Valence: <%= totalValence/recommendedCount * 100%></p>
+                <p class="text-center p-0 m-0">Average Valence: <%= (totalValence/recommendedCount).toFixed(4) * 100%></p>
             </div>
         </div>
     </div>
 </div>
+
 <canvas id="myChart"></canvas>
 <div class="card-columns">
     <% for (var j = 0; j < listTracks.length; j++) { %>
         <div class="card">
-        <div class="card-body">
-        <h5 class="card-title">Song Name: <%= listTracks[j].name %></h5>
-        <% for (var k = 0; k < listTracks[j].artists.length; k++) { %>
-            <% if (k == listTracks[j].artists.length - 1) { %>
-                <span class="card-text"><%= listTracks[j].artists[k].name %></span>
-            <% } else { %>
-                <span class="card-text"><%= listTracks[j].artists[k].name %>,</span>
-            <% } %>
-        <% } %>
-            <ul>
-                <% for (var i = 0; i < listTracks[j].relatedArtists.length; i++) { %>
-                    <% var currentArtist = listTracks[j].relatedArtists[i]; %>
-                    <li><%= currentArtist.name %></li>
-                        <ul>
-                            <% for (var l = 0; l < currentArtist.topTracks.length; l++) { %>
-                                <% var currentTrack = currentArtist.topTracks[l]; %>
-                                <li><%= currentTrack.name %> - <%= currentTrack.valence%></li>
-                            <% } %>
-                        </ul>
-                <% } %>
-            </ul>
+            <div class="card-body">
+                <h5 class="card-title">Song # <%= j+1 %></h5>
+                <span class="card-text"><%= listTracks[j].name %> by <%= listTracks[j].artist %></span>
             </div>
-            </div>
+        </div>
     <% } %>
 </div>
 
@@ -88,21 +75,17 @@ var chart = new Chart(ctx, {
     data: {
         datasets: [
             <% for (var y = 0; y < listTracks.length; y++) { %>
-               <% for (var x = 0; x < listTracks[y].relatedArtists.length; x++) { %>
-                    <% for (var z = 0; z < listTracks[y].relatedArtists[x].topTracks.length; z++) { %>
-                        { label: '<%= listTracks[y].relatedArtists[x].topTracks[z].name %> by <%=listTracks[y].relatedArtists[x].name %>',
+                        { label: '<%= listTracks[y].name %> by <%=listTracks[y].artist %>',
                           data: [
-                                { x: <%= listTracks[y].relatedArtists[x].topTracks[z].danceability * 100 %>,
-                                    y: <%= listTracks[y].relatedArtists[x].topTracks[z].popularity %>,
-                                    r: <%= listTracks[y].relatedArtists[x].topTracks[z].valence * 30 %> } 
+                                { x: <%= (listTracks[y].danceability).toFixed(4) * 100 %>,
+                                    y: <%= (listTracks[y].popularity).toFixed(4) * 100 %>,
+                                    r: <%= (listTracks[y].valence).toFixed(4) * 30 %> } 
                                 ],
-                          backgroundColor: '#FF5733'
+                          backgroundColor: '#1db954'
                         },
-                    <% } %>
-               <% } %>
             <% } %>
-            ],
-        },
+        ],
+    },
     options: {
         legend: {
             display: false
@@ -124,5 +107,6 @@ var chart = new Chart(ctx, {
     }
 });
 </script>
+
 </div>
 </body>
