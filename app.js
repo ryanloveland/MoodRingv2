@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 
 //Redirects to Spotify's authorization for a user
 //This then redirects to callback
-app.get('/login', (req, res) => {
+app.get('/login', (req, res, err) => {
     console.log("Beginning login")
     res.redirect('https://accounts.spotify.com/authorize' +
         '?response_type=code' +
@@ -40,6 +40,7 @@ app.get('/login', (req, res) => {
         '&scope=user-top-read' +
         '&redirect_uri=' + encodeURIComponent(redirect_uri));
 });
+
 
 //Currently sets authorization code and evaluates data in one way
 app.get('/callback', async (req, res) => {
@@ -62,13 +63,20 @@ app.get('/callback', async (req, res) => {
         }
     )
 
-    let listOfTracks = await User.recommend20Songs(spotifyApi)
-    res.send("<a href='/display'>Click Here to display some data analysis!</a>");
+    res.redirect('/display')
+})
+
+app.get('/logout', (req, res) => {
+    res.redirect('https://www.spotify.com/logout/')
+})
+
+app.get('/display', (req, res) => {
+    res.render('pages/selection.ejs')
 })
 
 //Sends data to display page for graph visualization
-app.get('/display', (req, res) => {
-    res.render('pages/index', { listTracks: listOfTracks });
+app.get('/display/twentySongs', async (req, res) => {
+    await User.recommend20Songs(spotifyApi, res)
 });
 
 //Port that Mood Ring is running on

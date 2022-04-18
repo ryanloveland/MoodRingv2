@@ -11,6 +11,8 @@
             font-family: 'Lato', sans-serif;
         }
     </style>
+    <title>Recommended Songs Page</title>
+
 </head>
 <body>
 
@@ -64,49 +66,51 @@
         </div>
     <% } %>
 </div>
-<div>
-<script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'bubble',
 
-    // The data for our dataset
-    data: {
-        datasets: [
-            <% for (var y = 0; y < listTracks.length; y++) { %>
-                        { label: '<%= listTracks[y].name %> by <%=listTracks[y].artist %>',
-                          data: [
-                                { x: <%= Math.round(listTracks[y].danceability * 100) %>,
-                                    y: <%= Math.round(listTracks[y].popularity * 100) %>,
-                                    r: <%= Math.round(listTracks[y].valence * 30)    %> } 
-                                ],
-                          backgroundColor: '#1db954'
-                        },
-            <% } %>
-        ],
-    },
-    options: {
-        legend: {
-            display: false
+<div class="container col-md-8">
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bubble',
+
+        // The data for our dataset
+        data: {
+            datasets: [
+                <% for (var y = 0; y < listTracks.length; y++) { %>
+                            { label: '<%= listTracks[y].name %> by <%=listTracks[y].artist %>',
+                            data: [
+                                    { x: <%= Math.round(listTracks[y].danceability * 100) %>,
+                                        y: <%= Math.round(listTracks[y].popularity * 100) %>,
+                                        r: <%= Math.round(listTracks[y].valence * 30)    %> } 
+                                    ],
+                            backgroundColor: '#1db954'
+                            },
+                <% } %>
+            ],
         },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    suggestedMin: 0,
-                    suggestedMax: 100
-                }
-            }],
-            xAxes: [{
-                ticks: {
-                    suggestedMin: 0,
-                    suggestedMax: 100
-                }
-            }]
+        options: {
+            legend: {
+                display: false,
+                fullWidth: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }]
+            }
         }
-    }
-});
-</script>
+    });
+    </script>
 </div>
 
 </div>

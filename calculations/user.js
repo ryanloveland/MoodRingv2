@@ -5,33 +5,7 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI
 });
 
-// module.exports = spotifyApi
-
-
-// module.exports.authorizeUser = async (myCode) => {
-//     await spotifyApi.authorizationCodeGrant(myCode).then(
-//         function (data) {
-//             // console.log('The token expires in ' + data.body['expires_in']);
-//             // console.log('The access token is ' + data.body['access_token']);
-//             // console.log('The refresh token is ' + data.body['refresh_token']);
-
-//             // Set the access token on the API object to use it in later calls
-//             spotifyApi.setAccessToken(data.body['access_token']);
-//             spotifyApi.setRefreshToken(data.body['refresh_token']);
-//             console.log("Authorization finished withouth error")
-//         },
-//         function (err) {
-//             if (err.statusCode === 400 || err.statusCode === 401) {
-//                 console.log(err.statusCode + " : Error with token authorization after shutdown - redirecting to home")
-//                 res.redirect('/')
-//             } else {
-//                 console.log('Something went wrong in the authorization callback!', err);
-//             }
-//         }
-//     )
-// }
-
-module.exports.recommend20Songs = async (mySpotifyApi) => {
+module.exports.recommend20Songs = async (mySpotifyApi, myRes) => {
     listOfTracks = []
     mySpotifyApi.getMyTopTracks()
         .then(function (data) {
@@ -63,7 +37,7 @@ module.exports.recommend20Songs = async (mySpotifyApi) => {
                                                     popularity: info.body.energy
                                                 }
                                                 if (listOfTracks.length >= (trackLimit * 4) - 1) {
-                                                    return listOfTracks
+                                                    myRes.render('pages/index', { listTracks: listOfTracks })
                                                 }
                                                 console.log(listOfTracks.length)
                                                 listOfTracks.push(track)
