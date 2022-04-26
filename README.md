@@ -1,4 +1,4 @@
-<h1 align="center"> Spotify Mood Ring v2 <h1>
+<h1 align="center"> Spotify Mood Ring v2 </h1>
   
 <p> This project originally got its start in 2019 during a Hackathon at the University of California, San Diego. My teammate, Brandon Hawi, and I worked on this project for two days, and figured out a basic understanding of the Spotify RESTful API as well as there authentication measures. We created a very rudementary cite that allowed users to sign in to their Spotify account and access recommended songs based solely on their current top 5 songs. The project at this point consisted of a few EJS files and few Javascript files to access user data and graph it! </p>
   
