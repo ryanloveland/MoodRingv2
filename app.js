@@ -75,9 +75,13 @@ app.get('/display', (req, res) => {
 })
 
 //Sends data to display page for graph visualization
-app.get('/display/twentySongs', async (req, res) => {
-    await User.recommend20Songs(spotifyApi, res)
+app.get('/display/relatedToTopSongs', async (req, res) => {
+    let numSongs = req.query.numSongRange
+    let songCollection = await User.recommend20Songs(spotifyApi, res, numSongs)
+
 });
 
 //Port that Mood Ring is running on
 app.listen(process.env.PORT, () => console.log(`MoodRing is now listening on port: ${process.env.PORT}`))
+
+// document.querySelector("#make20songs").addEventListener("click", User.make20SongsPlaylist(spotifyApi, songCollection))

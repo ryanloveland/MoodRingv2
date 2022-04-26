@@ -1,7 +1,6 @@
 <%- include("navbar") %>
 
 
-<!-- This is the Data Graph Display Page -->
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -11,14 +10,20 @@
             font-family: 'Lato', sans-serif;
         }
     </style>
+    <link rel="stylesheet" src="styles.css">
     <title>Recommended Songs Page</title>
-
 </head>
 <body>
 
 
 <div class="container">
-<h1 class="display-5">Your Spotify Data Analysis!</h1>
+
+<div class="row mt-3 mb-3">
+    <h1 class="display-5 col-6">Your Spotify Data Analysis!</h1>
+    <button class="btn btn-info" id="make20songs">Make Playlist!</button>
+    
+</div>  
+
 <% var totalValence = 0 %>
 <% var totalDance = 0 %>
 <% var totalPop = 0 %>
@@ -35,36 +40,43 @@
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Danceability: <%= (totalDance/recommendedCount).toFixed(4) * 100 %></p>
+                <p class="text-center p-0 m-0">Average Danceability: <%= Math.round(totalDance*100/recommendedCount) %></p>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Energy: <%= (totalPop/recommendedCount).toFixed(4) * 100 %></p>
+                <p class="text-center p-0 m-0">Average Energy: <%= Math.round(totalPop*100/recommendedCount) %></p>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card mb-3">
             <div class="card-body p-1">
-                <p class="text-center p-0 m-0">Average Valence: <%= (totalValence/recommendedCount).toFixed(4) * 100%></p>
+                <p class="text-center p-0 m-0">Average Valence: <%= Math.round(totalValence*100/recommendedCount)%></p>
             </div>
         </div>
     </div>
 </div>
 
-<canvas id="myChart"></canvas>
-<div class="card-columns">
-    <% for (var j = 0; j < listTracks.length; j++) { %>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><%= listTracks[j].name %> by <%= listTracks[j].artist %></h5>
-                <span class="card-text">Based on: <%= listTracks[j].originalSongRelation %> by <%= listTracks[j].originalArtistRelation %></span>
-            </div>
+<div class="row">
+    <div class="col-md-8">
+        <canvas id="myChart" ></canvas>
+    </div>
+    <div class="col-md-4" >
+        <h4>Your <%= listTracks.length %>  Recommended Songs</h4>
+        <div id="songScrollList" style="max-height: 400px; overflow-y: scroll;">
+            <% for (var j = 0; j < listTracks.length; j++) { %>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= listTracks[j].name %> by <%= listTracks[j].artist %></h5>
+                        <span class="card-text">Based on: <%= listTracks[j].originalSongRelation %> by <%= listTracks[j].originalArtistRelation %></span>
+                    </div>
+                </div>
+            <% } %>
         </div>
-    <% } %>
+    </div>
 </div>
 
 <div class="container col-md-8">
@@ -82,7 +94,7 @@
                             data: [
                                     { x: <%= Math.round(listTracks[y].danceability * 100) %>,
                                         y: <%= Math.round(listTracks[y].popularity * 100) %>,
-                                        r: <%= Math.round(listTracks[y].valence * 30)    %> } 
+                                        r: <%= Math.round(listTracks[y].valence * 25)    %> } 
                                     ],
                             backgroundColor: '#1db954'
                             },
@@ -111,7 +123,9 @@
         }
     });
     </script>
+    
 </div>
 
 </div>
+<script src="buttons.js"></script>
 </body>

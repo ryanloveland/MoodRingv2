@@ -5,12 +5,12 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI
 });
 
-module.exports.recommend20Songs = async (mySpotifyApi, myRes) => {
+module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
     listOfTracks = []
     mySpotifyApi.getMyTopTracks()
         .then(function (data) {
             let topTracks = data.body.items;
-            trackLimit = topTracks.length >= 5 ? 5 : topArtists.length
+            trackLimit = topTracks.length >= myNumSongs ? myNumSongs : topTracks.length
             return topTracks.slice(0, trackLimit);
         })
         .then(function (result) {
@@ -28,6 +28,7 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes) => {
                                         mySpotifyApi.getAudioFeaturesForTrack(songToSearch)
                                             .then(function (info) {
                                                 var track = {
+                                                    originalSongId: result[i].id,
                                                     originalSongRelation: result[i].name,
                                                     originalArtistRelation: result[i].album.artists[0].name,
                                                     artist: relatedArtists.body.artists[j].name,
@@ -37,9 +38,10 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes) => {
                                                     popularity: info.body.energy
                                                 }
                                                 if (listOfTracks.length >= (trackLimit * 4) - 1) {
+                                                    console.log(listOfTracks.length + " recommended songs loaded...")
                                                     myRes.render('pages/index', { listTracks: listOfTracks })
+                                                    return listOfTracks
                                                 }
-                                                console.log(listOfTracks.length)
                                                 listOfTracks.push(track)
                                             })
                                     }
@@ -51,5 +53,19 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes) => {
         .catch(function (error) {
             console.log("Something went wrong in recommend 20 Tracks!")
             console.error(error)
+        })
+}
+
+
+module.exports.make20SongsPlaylist = async (mySpotifyApi, collection) => {
+    mySpotifyApi.createPlaylist("20 New Songs!", { "description": "20 new songs recommended from the top 5 songs that you listen to!", "public": true })
+        .then(function (data) {
+            console.log("Data after creating a new playlist")
+            console.log(data)
+
+            // let songIds = collection.map( (e) => { "spotify:track:"+ e.originalSongId})
+            // console.log(songIds)
+
+            // console.log("Playlist created")
         })
 }
