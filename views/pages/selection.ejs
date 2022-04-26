@@ -1,0 +1,60 @@
+<%- include("navbar") %>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Selection Page</title>
+</head>
+
+<body>
+    <div class="container col-md-6 mt-3" >
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recommend From Top Songs</h5>
+                <span class="card-text">
+                    <form action="/display/relatedToTopSongs">
+                        <label for="numSongRange">Number of Songs (Between 0 and 10):</label>
+                        <input type="range" name="numSongRange" id="numSongRange" min="1" max="10">
+                        <output for="numSongRange" onforminput="value = numSongRange.valueAsNumber;"></output>
+                        <button class="btn btn-info" id="topSongButton">Show Me!</button>
+                    </form>
+                </span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Daily Recommendations</h5>
+                <span class="card-text"></span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recommendations by Genre</h5>
+                <span class="card-text"></span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Music by Artists I Follow</h5>
+                <span class="card-text"></span>
+            </div>
+        </div>
+    </div>
+    <script src="buttons.js">
+        document.querySelector("#topSongButton").addEventListener("hover", () => {
+
+        console.log("Hello can you hear me!")
+        alert("HEY!")
+        })
+    </script>
+    
+</body>
+
+
+</html>
