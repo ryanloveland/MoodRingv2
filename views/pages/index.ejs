@@ -5,22 +5,31 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
-    <style>
+    <!-- <style>
         html {
             font-family: 'Lato', sans-serif;
         }
-    </style>
-    <link rel="stylesheet" src="styles.css">
+    </style> -->
     <title>Recommended Songs Page</title>
+    <!-- <link rel='stylesheet' href='/styles/style.css'> -->
+
+    <link rel="stylesheet" href="/views/styles.css">
+
 </head>
 <body>
+
+
 
 
 <div class="container">
 
 <div class="row mt-3 mb-3">
     <h1 class="display-5 col-6">Your Spotify Data Analysis!</h1>
-    <button class="btn btn-info" id="make20songs">Make Playlist!</button>
+    <button class="btn btn-info" onclick="sayHello();" id="makeTopRecommendedPlaylist">Make Playlist!</button>
+
+    <!-- <form onsubmit="console.log('ell there m8');">
+        <button class="btn btn-info" id="makeTopRecommendedPlaylist">Make Playlist!</button>
+    </form> -->
     
 </div>  
 
@@ -127,5 +136,4 @@
 </div>
 
 </div>
-<script src="buttons.js"></script>
 </body>

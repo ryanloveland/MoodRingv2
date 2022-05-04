@@ -5,6 +5,9 @@ const request = require('request');
 const url = require('url');
 var d3 = require("d3");
 const User = require("./calculations/user")
+const path = require("path")
+
+
 
 
 //App functionals
@@ -22,6 +25,9 @@ var spotifyApi = new SpotifyWebApi({
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: redirect_uri
 });
+
+app.use(express.static(path.join(__dirname, "public")));
+
 
 app.set('view engine', 'ejs');
 
@@ -77,11 +83,12 @@ app.get('/display', (req, res) => {
 //Sends data to display page for graph visualization
 app.get('/display/relatedToTopSongs', async (req, res) => {
     let numSongs = req.query.numSongRange
-    let songCollection = await User.recommend20Songs(spotifyApi, res, numSongs)
-
+    await User.recommend20Songs(spotifyApi, res, numSongs)
 });
+
+app.get('/display/dailyNewSongs', async (req, res) => {
+    await User.getNewMusic(spotifyApi, res)
+})
 
 //Port that Mood Ring is running on
 app.listen(process.env.PORT, () => console.log(`MoodRing is now listening on port: ${process.env.PORT}`))
-
-// document.querySelector("#make20songs").addEventListener("click", User.make20SongsPlaylist(spotifyApi, songCollection))

@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 var SpotifyWebApi = require("spotify-web-api-node")
 var spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
@@ -44,15 +45,24 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
                                                 }
                                                 listOfTracks.push(track)
                                             })
+
+
                                     }
+                                    // return listOfTracks
                                 })
+                            // .then(function (data) {
+                            //     console.log(listOfTracks.length + " recommended songs loaded...")
+                            //     myRes.render('pages/index', { listTracks: listOfTracks })
+                            //     return listOfTracks
+                            // })
+
                         }
                     })
             }
         })
         .catch(function (error) {
-            console.log("Something went wrong in recommend 20 Tracks!")
-            console.error(error)
+            console.log("Permissions denied on data display page - redirecting to home!")
+            myRes.redirect("/")
         })
 }
 
@@ -68,4 +78,30 @@ module.exports.make20SongsPlaylist = async (mySpotifyApi, collection) => {
 
             // console.log("Playlist created")
         })
+}
+
+
+module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
+    mySpotifyApi.getNewReleases({ limit: 5, offset: 0, country: 'US' })
+        .then(function (data) {
+            myNewSongs = data.body.albums.items
+            let dailyTracks = [];
+            for (let i = 0; i < myNewSongs.length; i++) {
+                var dailySongInfo = {
+                    dailySong: myNewSongs[i].name,
+                    dailyArtist: myNewSongs[i].artists[0].name,
+                    dailyImage: myNewSongs[i].images[0].url
+                }
+                dailyTracks.push(dailySongInfo)
+            }
+            return dailyTracks
+        })
+        .then(function (data) {
+            console.log(data)
+            myRes.render('pages/daily', { myDailyTracks: data })
+        })
+        .catch(function (err) {
+            console.log("Permissions denied on data display page - redirecting to home!")
+            myRes.redirect("/")
+        });
 }
