@@ -8,6 +8,7 @@ var spotifyApi = new SpotifyWebApi({
 
 module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
     listOfTracks = []
+    let errorCount = 0;
     mySpotifyApi.getMyTopTracks()
         .then(function (data) {
             let topTracks = data.body.items;
@@ -24,6 +25,8 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
                             mySpotifyApi.getArtistTopTracks(artistToSearch, 'US')
                                 .then(function (songs) {
                                     songLimit = songs.body.tracks.length >= 2 ? 2 : songs.body.tracks.length
+                                    if (songLimit !== 2) { errorCount += 2 - songs.body.tracks.length }
+
                                     for (let k = 0; k < songLimit; k++) {
                                         songToSearch = songs.body.tracks[k].id
                                         mySpotifyApi.getAudioFeaturesForTrack(songToSearch)
@@ -38,26 +41,17 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
                                                     danceability: info.body.danceability,
                                                     popularity: info.body.energy
                                                 }
-                                                if (listOfTracks.length >= (trackLimit * 4) - 1) {
+                                                listOfTracks.push(track)
+                                                if (listOfTracks.length >= (trackLimit * 4) - errorCount) {
                                                     console.log(listOfTracks.length + " recommended songs loaded...")
                                                     myRes.render('pages/index', { listTracks: listOfTracks })
-                                                    return listOfTracks
                                                 }
-                                                listOfTracks.push(track)
                                             })
-
-
                                     }
-                                    // return listOfTracks
                                 })
-                            // .then(function (data) {
-                            //     console.log(listOfTracks.length + " recommended songs loaded...")
-                            //     myRes.render('pages/index', { listTracks: listOfTracks })
-                            //     return listOfTracks
-                            // })
-
                         }
                     })
+
             }
         })
         .catch(function (error) {
