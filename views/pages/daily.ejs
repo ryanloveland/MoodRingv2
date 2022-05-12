@@ -5,23 +5,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
-    <title>New Daily Music Page!</title>
+
+    <link rel="stylesheet" href="/styles.css">
+    <title>Daily Music!</title>
 </head>
+
 <body>
 
-<div class="row">
-    <div class="col-md-4" >
-        <h4>Your <%= myDailyTracks.length %>  Daily Songs</h4>
-        <div class="container">
-            <% for (var j = 0; j < myDailyTracks.length; j++) { %>
-                <div class="card">
-                    <div class="card-body">
-                        <img src="<%= myDailyTracks[j].dailyImage %>" alt="" style="max-height: 160px; max-width: 160px">
-                        <h5 class="card-title"><%= myDailyTracks[j].dailySong %> by <%= myDailyTracks[j].dailyArtist %></h5>
-                    </div>
+<div class="container">
+    <div class="row mt-3 mb-3">
+        <h2 class="display-5" id="dailyHeader">Your <%= myDailyTracks.length %>  Daily Songs</h4>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <% for (var j = 0; j < myDailyTracks.length; j++) { %>
+            <div class="card">
+                <div class="card-body">
+                    <img src="<%= myDailyTracks[j].dailyImage %>" class="coverArt">
+                    <h1 class="songInfo"><%= myDailyTracks[j].dailySong %> by <%= myDailyTracks[j].dailyArtist %></p>
                 </div>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
     </div>
 </div>
 

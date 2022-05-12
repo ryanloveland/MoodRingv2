@@ -7,6 +7,8 @@ var d3 = require("d3");
 const User = require("./calculations/user")
 const path = require("path")
 
+var bodyParser = require("body-parser");
+
 
 
 
@@ -26,8 +28,8 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: redirect_uri
 });
 
-app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 
@@ -43,7 +45,7 @@ app.get('/login', (req, res, err) => {
     res.redirect('https://accounts.spotify.com/authorize' +
         '?response_type=code' +
         '&client_id=' + process.env.CLIENT_ID +
-        '&scope=user-top-read' +
+        '&scope=user-top-read playlist-modify' +
         '&redirect_uri=' + encodeURIComponent(redirect_uri));
 });
 
@@ -88,6 +90,13 @@ app.get('/display/relatedToTopSongs', async (req, res) => {
 
 app.get('/display/dailyNewSongs', async (req, res) => {
     await User.getNewMusic(spotifyApi, res)
+})
+
+app.post('/makePlaylist', (req, res) => {
+    console.log("Post request sent to make new playlist")
+    let mySongs = (req.body.playlistInfo).split(",");
+    User.makePlaylist(spotifyApi, mySongs, req.body.playlistName)
+    res.redirect('/')
 })
 
 //Port that Mood Ring is running on

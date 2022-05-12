@@ -25,7 +25,12 @@
 
 <div class="row mt-3 mb-3">
     <h1 class="display-5 col-6">Your Spotify Data Analysis!</h1>
-    <button class="btn btn-info" onclick="sayHello();" id="makeTopRecommendedPlaylist">Make Playlist!</button>
+    <form action="/makePlaylist" method="post">
+        <input type="text" name="playlistName" id="playlistName" placeholder="Playlist Name">
+        <input type="text" name="playlistInfo" id="playlistInfo" hidden value="<%- playlist %>">
+        <button class="btn btn-info" id="makeTopRecommendedPlaylist">Make Playlist!</button>
+    </form>
+    
 
     <!-- <form onsubmit="console.log('ell there m8');">
         <button class="btn btn-info" id="makeTopRecommendedPlaylist">Make Playlist!</button>

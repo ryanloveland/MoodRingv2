@@ -8,6 +8,7 @@ var spotifyApi = new SpotifyWebApi({
 
 module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
     listOfTracks = []
+    playlistSongs = []
     let errorCount = 0;
     mySpotifyApi.getMyTopTracks()
         .then(function (data) {
@@ -42,9 +43,11 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
                                                     popularity: info.body.energy
                                                 }
                                                 listOfTracks.push(track)
+                                                playlistSongs.push("spotify:track:" + songs.body.tracks[k].id)
                                                 if (listOfTracks.length >= (trackLimit * 4) - errorCount) {
                                                     console.log(listOfTracks.length + " recommended songs loaded...")
-                                                    myRes.render('pages/index', { listTracks: listOfTracks })
+                                                    myRes.render('pages/index', { listTracks: listOfTracks, playlist: playlistSongs })
+                                                    return listOfTracks
                                                 }
                                             })
                                     }
@@ -61,22 +64,26 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
 }
 
 
-module.exports.make20SongsPlaylist = async (mySpotifyApi, collection) => {
-    mySpotifyApi.createPlaylist("20 New Songs!", { "description": "20 new songs recommended from the top 5 songs that you listen to!", "public": true })
+module.exports.makePlaylist = async (mySpotifyApi, collection, myName) => {
+    mySpotifyApi.createPlaylist(myName, { "description": "New songs recommended from the top songs that you listen to! -Mood Ring!", "public": true })
         .then(function (data) {
-            console.log("Data after creating a new playlist")
-            console.log(data)
-
-            // let songIds = collection.map( (e) => { "spotify:track:"+ e.originalSongId})
-            // console.log(songIds)
-
-            // console.log("Playlist created")
+            console.log("Created playlist : " + myName)
+            mySpotifyApi.addTracksToPlaylist(data.body.id, collection)
+                .then(function (data) {
+                    console.log("    Added tracks to playlist")
+                })
+                .catch(function (err) {
+                    console.log("Couldn't add tracks to playlist")
+                })
+        })
+        .catch(function (err) {
+            console.log("Something went wrong when creating your playlist")
         })
 }
 
 
 module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
-    mySpotifyApi.getNewReleases({ limit: 5, offset: 0, country: 'US' })
+    mySpotifyApi.getNewReleases({ limit: 12, offset: 0, country: 'US' })
         .then(function (data) {
             myNewSongs = data.body.albums.items
             let dailyTracks = [];
@@ -91,7 +98,6 @@ module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
             return dailyTracks
         })
         .then(function (data) {
-            console.log(data)
             myRes.render('pages/daily', { myDailyTracks: data })
         })
         .catch(function (err) {
