@@ -83,10 +83,11 @@ module.exports.makePlaylist = async (mySpotifyApi, collection, myName) => {
 
 
 module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
-    mySpotifyApi.getNewReleases({ limit: 12, offset: 0, country: 'US' })
+    mySpotifyApi.getNewReleases({ limit: 20, offset: 0, country: 'US' })
         .then(function (data) {
             myNewSongs = data.body.albums.items
             let dailyTracks = [];
+            console.log(myNewSongs)
             for (let i = 0; i < myNewSongs.length; i++) {
                 var dailySongInfo = {
                     dailySong: myNewSongs[i].name,
@@ -104,4 +105,49 @@ module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
             console.log("Permissions denied on data display page - redirecting to home!")
             myRes.redirect("/")
         });
+}
+
+module.exports.getMissedMusic = async (mySpotifyApi, myRes, oldMissed, findArtist) => {
+    mySpotifyApi.searchTracks(`artist: ${findArtist}`)
+        .then(function (data) {
+            artistTracks = data.body.tracks.items
+
+            releaseDates = artistTracks.map(x => { return x.album.release_date })
+            console.log(releaseDates)
+
+
+
+            let missedTracks = oldMissed != "" ? oldMissed : []
+
+            const date = new Date();
+            const currYear = date.getFullYear();
+            const currMonth = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1)
+            const prevMonth = ((date.getMonth() < 10) ? "0" : "") + (date.getMonth())
+
+            for (let i = 0; i < artistTracks.length; i++) {
+                e = artistTracks[i].album.release_date
+                ymd = e.split("-")
+
+                if ((ymd[1] === currMonth || ymd[1] === prevMonth) && ymd[0] === currYear.toString(10)) {
+                    var missedSongInfo = {
+                        missedSongId: artistTracks[i].id,
+                        missedSongArtist: artistTracks[i].album.artists[0].name,
+                        missedSongName: artistTracks[i].name,
+                        missedSongImage: artistTracks[i].album.images[0].url
+                    }
+                    missedTracks.push(missedSongInfo)
+                }
+            }
+            return missedTracks
+        })
+        .then(function (data) {
+            let playlistInfo = data.map(x => { return "spotify:track:" + x.missedSongId })
+            myRes.render('pages/missed', { myMissedTracks: data, playlist: playlistInfo })
+        })
+        .catch(function (err) {
+            console.log("Error in getMissedMusic")
+            console.log(err)
+            console.log(err.body)
+            myRes.redirect("/")
+        })
 }

@@ -92,6 +92,11 @@ app.get('/display/dailyNewSongs', async (req, res) => {
     await User.getNewMusic(spotifyApi, res)
 })
 
+app.post('/display/songsMissed', async (req, res) => {
+    oldMissedTracks = req.body.missedInfo == "" ? "" : JSON.parse(req.body.missedInfo)
+    User.getMissedMusic(spotifyApi, res, oldMissedTracks, req.body.findArtist)
+})
+
 app.post('/makePlaylist', (req, res) => {
     console.log("Post request sent to make new playlist")
     let mySongs = (req.body.playlistInfo).split(",");
