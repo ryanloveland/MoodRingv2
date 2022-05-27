@@ -1,0 +1,43 @@
+<%- include("navbar") %>
+
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/styles.css">
+    <title>Music You Missed!</title>
+</head>
+
+<body>
+    <div id="missedHeader">
+        <h1>You missed <%= myMissedTracks.length %> Songs!</h4>
+        <span>
+        <form action="/display/songsMissed" method="post">
+            <input type="text" name="findArtist" placeholder="Artist Name">
+            <input type="textarea" name="missedInfo" id="missedInfo" hidden value="<%= JSON.stringify(myMissedTracks) %>">
+            <button class="btn btn-info" id="searchMissed">Search</button>
+        </form>
+        <form action="/makePlaylist" method="post">
+            <input type="text" name="playlistName" placeholder="Playlist Name">
+            <input type="text" name="playlistInfo" hidden value="<%- playlist %>">
+            <button class="btn btn-info">Make Playlist!</button>
+        </form>
+        </span>
+    </div>
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <% for (var j = 0; j < myMissedTracks.length; j++) { %>
+                <div class="card">
+                    <div class="card-body">
+                        <img src="<%= myMissedTracks[j].missedSongImage %>" class="coverArt">
+                        <h1 class="songInfo"><%= myMissedTracks[j].missedSongName %> by <%= myMissedTracks[j].missedSongArtist %> </p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <script src="/javascripts/buttons.js"></script>
+
+</body>
