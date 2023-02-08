@@ -27,15 +27,15 @@ var spotifyApi = new SpotifyWebApi({
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: redirect_uri
 });
-
-app.use(express.static(__dirname + "/public"));
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + "/views"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs');
+
 
 //Loads home page
 app.get('/', (req, res) => {
-    res.render('pages/home');
+    res.render('home.ejs');
 });
 
 //Redirects to Spotify's authorization for a user
@@ -79,8 +79,17 @@ app.get('/logout', (req, res) => {
 })
 
 app.get('/display', (req, res) => {
-    res.render('pages/selection.ejs')
+    res.render('selection.ejs')
 })
+
+app.post('/discography', (req, res) => {
+    res.render('discography/discography.ejs')
+})
+
+app.get('/discography', (req, res) => {
+    res.render('discography/discography.ejs')
+})
+
 
 //Sends data to display page for graph visualization
 app.get('/display/relatedToTopSongs', async (req, res) => {
