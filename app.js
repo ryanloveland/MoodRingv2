@@ -4,7 +4,7 @@ const dotenv = require("dotenv").config()
 const request = require('request');
 const url = require('url');
 var d3 = require("d3");
-const User = require("./calculations/user")
+const User = require("./services/user")
 const path = require("path")
 
 var bodyParser = require("body-parser");
@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Loads home page
 app.get('/', (req, res) => {
-    res.render('home.ejs');
+    res.render('home/home.ejs');
 });
 
 //Redirects to Spotify's authorization for a user
@@ -79,7 +79,7 @@ app.get('/logout', (req, res) => {
 })
 
 app.get('/display', (req, res) => {
-    res.render('selection.ejs')
+    res.render('menu/menu.ejs')
 })
 
 app.post('/discography', (req, res) => {
@@ -102,7 +102,9 @@ app.get('/display/dailyNewSongs', async (req, res) => {
 })
 
 app.post('/display/songsMissed', async (req, res) => {
-    oldMissedTracks = req.body.missedInfo == "" ? "" : JSON.parse(req.body.missedInfo)
+    console.log(req.body)
+    oldMissedTracks = ""
+    //oldMissedTracks = req.body.missedInfo == "" ? "" : JSON.parse(req.body.missedInfo)
     User.getMissedMusic(spotifyApi, res, oldMissedTracks, req.body.findArtist)
 })
 

@@ -46,7 +46,7 @@ module.exports.recommend20Songs = async (mySpotifyApi, myRes, myNumSongs) => {
                                                 playlistSongs.push("spotify:track:" + songs.body.tracks[k].id)
                                                 if (listOfTracks.length >= (trackLimit * 4) - errorCount) {
                                                     console.log(listOfTracks.length + " recommended songs loaded...")
-                                                    myRes.render('pages/index', { listTracks: listOfTracks, playlist: playlistSongs })
+                                                    myRes.render('recommended/recommended.ejs', { listTracks: listOfTracks, playlist: playlistSongs })
                                                     return listOfTracks
                                                 }
                                             })
@@ -99,7 +99,7 @@ module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
             return dailyTracks
         })
         .then(function (data) {
-            myRes.render('pages/daily', { myDailyTracks: data })
+            myRes.render('daily/daily.ejs', { myDailyTracks: data })
         })
         .catch(function (err) {
             console.log("Permissions denied on data display page - redirecting to home!")
@@ -114,8 +114,6 @@ module.exports.getMissedMusic = async (mySpotifyApi, myRes, oldMissed, findArtis
 
             releaseDates = artistTracks.map(x => { return x.album.release_date })
             console.log(releaseDates)
-
-
 
             let missedTracks = oldMissed != "" ? oldMissed : []
 
@@ -142,7 +140,7 @@ module.exports.getMissedMusic = async (mySpotifyApi, myRes, oldMissed, findArtis
         })
         .then(function (data) {
             let playlistInfo = data.map(x => { return "spotify:track:" + x.missedSongId })
-            myRes.render('pages/missed', { myMissedTracks: data, playlist: playlistInfo })
+            myRes.render('missed/missed', { myMissedTracks: data, playlist: playlistInfo })
         })
         .catch(function (err) {
             console.log("Error in getMissedMusic")
