@@ -87,7 +87,7 @@ module.exports.getNewMusic = async (mySpotifyApi, myRes) => {
         .then(function (data) {
             myNewSongs = data.body.albums.items
             let dailyTracks = [];
-            console.log(myNewSongs)
+            //console.log(myNewSongs)
             for (let i = 0; i < myNewSongs.length; i++) {
                 var dailySongInfo = {
                     dailySong: myNewSongs[i].name,
@@ -141,6 +141,26 @@ module.exports.getMissedMusic = async (mySpotifyApi, myRes, oldMissed, findArtis
         .then(function (data) {
             let playlistInfo = data.map(x => { return "spotify:track:" + x.missedSongId })
             myRes.render('missed/missed', { myMissedTracks: data, playlist: playlistInfo })
+        })
+        .catch(function (err) {
+            console.log("Error in getMissedMusic")
+            console.log(err)
+            console.log(err.body)
+            myRes.redirect("/")
+        })
+}
+
+module.exports.getDiscography = async (mySpotifyApi, findArtist, myRes) => {
+    mySpotifyApi.searchArtists(`artist: ${findArtist}`)
+        .then(function (data) {
+            //getArtistAlbums
+            console.log("we get here")
+            return data.body.artists.items[0].id
+        })
+        .then(function (id) {
+            spotifyApi.getArtistAlbums(id).then(function (id) {
+                console.log(data.body)
+            })
         })
         .catch(function (err) {
             console.log("Error in getMissedMusic")

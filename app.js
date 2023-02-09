@@ -82,6 +82,39 @@ app.get('/display', (req, res) => {
     res.render('menu/menu.ejs')
 })
 
+app.post('/discography/search', async (req, res) => {
+    console.log("response: ", req.body)
+    spotifyApi.searchArtists(`artist: ${req.body.artistName}`)
+        .then(function (data) {
+            //getArtistAlbums
+            console.log("we get here")
+            return data.body.artists.items[0].id
+        })
+        .then(function (id) {
+            spotifyApi.getArtistAlbums(id, { limit: 40 }).then(function (data) {
+                datesArray = []
+                songNameArray = []
+                for (let i = 0; i < data.body.items.length; i++) {
+                    console.log(data.body.items[i].release_date)
+                    datesArray.push(data.body.items[i].release_date)
+                    spotifyApi.getAlbumTracks(data.body.items[i].id)
+                        .then(function (songs) {
+                            //console.log(songs.body.items[0])
+                            songNameArray.push(songs.body.items[0].name)
+                            return songs.body.items[0].name
+                        })
+                }
+                return (datesArray, songNameArray)
+            })
+                .then(function (data) {
+                    console.log(data)
+                })
+        })
+
+    //await User.getDiscography(spotifyApi, , res)
+    res.render('home/home.ejs')
+})
+
 app.post('/discography', (req, res) => {
     res.render('discography/discography.ejs')
 })
@@ -89,6 +122,7 @@ app.post('/discography', (req, res) => {
 app.get('/discography', (req, res) => {
     res.render('discography/discography.ejs')
 })
+
 
 
 //Sends data to display page for graph visualization
@@ -102,7 +136,7 @@ app.get('/display/dailyNewSongs', async (req, res) => {
 })
 
 app.post('/display/songsMissed', async (req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     oldMissedTracks = ""
     //oldMissedTracks = req.body.missedInfo == "" ? "" : JSON.parse(req.body.missedInfo)
     User.getMissedMusic(spotifyApi, res, oldMissedTracks, req.body.findArtist)
